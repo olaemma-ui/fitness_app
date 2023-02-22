@@ -1,12 +1,18 @@
 import 'package:fitness_app/View/AppView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'View/Widgets/AppUiManager.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await Hive.initFlutter();
+
+  await Hive.openBox('goals');
+  await Hive.openBox('history');
+  await Hive.openBox('activity');
   runApp(const MyApp());
 }
 

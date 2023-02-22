@@ -1,3 +1,4 @@
+import 'package:fitness_app/View/Service/Home.service.dart';
 import 'package:fitness_app/View/Widgets/ColorManager.dart';
 import 'package:fitness_app/View/Widgets/FontManager.dart';
 import 'package:fitness_app/View/Widgets/ProgressBar.paint.dart';
@@ -12,22 +13,23 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _HomeState extends State<Home>
+    with TickerProviderStateMixin, HomeService {
   late AnimationController _animationController;
 
+  bool started = false;
   List<Map<String, dynamic>> daysData = [
-    {'day': 'Mn', 'percent': 30.0},
     {'day': 'Tu', 'percent': 10.0},
     {'day': 'Wd', 'percent': 0.0},
     {'day': 'Th', 'percent': 0.0},
     {'day': 'Fr', 'percent': 0.0},
     {'day': 'Sa', 'percent': 0.0},
-    {'day': 'Su', 'percent': 0.0}
+    {'day': 'Su', 'percent': 0.0},
+    {'day': 'Mn', 'percent': 30.0},
   ];
 
   @override
   void initState() {
-    // TODO: implement initState
     _animationController = AnimationController(
         vsync: this, duration: const Duration(microseconds: 250));
     super.initState();
@@ -94,14 +96,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     horizontal: 12.0),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
-                            onPressed: () {},
+                            onPressed: () {
+                              started = !started;
+                              setState(() {});
+                            },
                             icon: AnimatedIcon(
-                                icon: AnimatedIcons.play_pause,
+                                icon: (started)
+                                    ? AnimatedIcons.pause_play
+                                    : AnimatedIcons.play_pause,
                                 size: 20,
                                 color: ColorManager.light,
                                 progress: _animationController),
                             label: Text(
-                              'Steps',
+                              (started) ? 'Pause' : 'Start',
                               style:
                                   FontManager.body1(color: ColorManager.green),
                             )),
@@ -174,7 +181,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 28),
                 Ink(
-                  width: 300,
+                  width: 350,
                   height: 90,
                   decoration: BoxDecoration(
                       color: ColorManager.transPrimary,
